@@ -158,38 +158,27 @@ interface CodeCopyProviderProps {
  */
 export function CodeCopyProvider({ children }: CodeCopyProviderProps) {
   const rootNode = React.useRef<HTMLDivElement>(null);
+
   React.useEffect(() => {
     document.addEventListener('keydown', (event) => {
-      if (!rootNode.current) {
-        return;
-      }
+      if (!rootNode.current) return;
 
-      // Skip if user is highlighting a text.
-      if (hasNativeSelection(event.target as HTMLTextAreaElement)) {
-        return;
-      }
+      // Skip if user is highlighting a text
+      if (hasNativeSelection(event.target as HTMLTextAreaElement)) return;
 
       // Skip if it's not a copy keyboard event
-      if (
-        !(
-          (event.ctrlKey || event.metaKey) &&
-          String.fromCharCode(event.keyCode) === 'C' &&
-          !event.shiftKey &&
-          !event.altKey
-        )
-      ) {
-        return;
-      }
+      if (!((event.ctrlKey || event.metaKey) && String.fromCharCode(event.keyCode) === 'C' && !event.shiftKey && !event.altKey)) return;
 
-      const copyBtn = rootNode.current.querySelector('.MuiCode-copy') as HTMLButtonElement;
+      const copyBtn = rootNode.current.querySelector('.MuiCode-copy') as HTMLButtonElement | null;
+      if (!copyBtn) return;
+
       const initialEventAction = copyBtn.getAttribute('data-ga-event-action');
-      // update the 'data-ga-event-action' on the button to track keyboard interaction
-      copyBtn.dataset.gaEventAction =
-        initialEventAction?.replace('click', 'keyboard') || 'copy-keyboard';
+      copyBtn.dataset.gaEventAction = initialEventAction?.replace('click', 'keyboard') ?? 'copy-keyboard';
       copyBtn.click(); // let the GA setup in GoogleAnalytics.js do the job
-      copyBtn.dataset.gaEventAction = initialEventAction!; // reset the 'data-ga-event-action' back to initial
+      copyBtn.dataset.gaEventAction = initialEventAction ?? ''; // reset back safely
     });
   }, []);
+
   return (
     <CodeBlockContext.Provider value={rootNode}>
       <InitCodeCopy />

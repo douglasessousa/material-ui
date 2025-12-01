@@ -28,13 +28,19 @@ const useUtilityClasses = (ownerState: AutocompleteOptionOwnerState) => {
 
 export const StyledAutocompleteOption = styled(StyledListItemButton as unknown as 'li')<{
   ownerState: AutocompleteOptionOwnerState;
-}>(({ theme, ownerState }) => ({
-  '&[aria-disabled="true"]': theme.variants[`${ownerState.variant!}Disabled`]?.[ownerState.color!],
-  '&[aria-selected="true"]': {
-    ...theme.variants[`${ownerState.variant!}Active`]?.[ownerState.color!],
-    fontWeight: theme.vars.fontWeight.md,
-  },
-}));
+}>(({ theme, ownerState }) => {
+  const variant = ownerState.variant ?? 'plain';
+  const color = ownerState.color ?? 'neutral';
+
+  return {
+    '&[aria-disabled="true"]': theme.variants[`${variant}Disabled`]?.[color],
+    '&[aria-selected="true"]': {
+      ...theme.variants[`${variant}Active`]?.[color],
+      fontWeight: theme.vars.fontWeight.md,
+    },
+  };
+});
+
 
 const AutocompleteOptionRoot = styled(StyledAutocompleteOption, {
   name: 'JoyAutocompleteOption',

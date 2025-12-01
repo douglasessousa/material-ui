@@ -31,18 +31,24 @@ const AccordionDetailsRoot = styled('div', {
   name: 'JoyAccordionDetails',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: AccordionDetailsOwnerState }>(({ ownerState, theme }) => ({
-  overflow: 'hidden',
-  borderRadius: 'var(--AccordionDetails-radius)',
-  display: 'grid',
-  gridTemplateRows: '1fr',
-  marginInline: 'calc(-1 * var(--ListItem-paddingLeft)) calc(-1 * var(--ListItem-paddingRight))',
-  transition: 'var(--AccordionDetails-transition)',
-  ...theme.variants[ownerState.variant!]?.[ownerState.color!],
-  [`&:not(.${accordionDetailsClasses.expanded})`]: {
-    gridTemplateRows: '0fr',
-  },
-}));
+})<{ ownerState: AccordionDetailsOwnerState }>(({ ownerState, theme }) => {
+  const variant = ownerState.variant ?? 'plain';
+  const color = ownerState.color ?? 'neutral'; 
+
+  return {
+    overflow: 'hidden',
+    borderRadius: 'var(--AccordionDetails-radius)',
+    display: 'grid',
+    gridTemplateRows: '1fr',
+    marginInline: 'calc(-1 * var(--ListItem-paddingLeft)) calc(-1 * var(--ListItem-paddingRight))',
+    transition: 'var(--AccordionDetails-transition)',
+    ...theme.variants[variant]?.[color],
+    [`&:not(.${accordionDetailsClasses.expanded})`]: {
+      gridTemplateRows: '0fr',
+    },
+  };
+});
+
 
 /**
  * The content slot is required because the root slot is a CSS Grid, it needs a child.
@@ -103,9 +109,10 @@ const AccordionDetails = React.forwardRef(function AccordionDetails(inProps, ref
         'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
       );
 
-      elements.forEach((elm) => {
+      elements.forEach((elm: HTMLElement) => {
         const currentTabIndex = elm.getAttribute('tabindex');
-        const prevTabIndex = elm.getAttribute('data-prev-tabindex');
+         const prevTabIndex = elm.getAttribute('data-prev-tabindex');
+
 
         if (expanded) {
           // Restore the previous tabindex if it exists, or remove it if it was "unset"

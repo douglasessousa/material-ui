@@ -55,37 +55,42 @@ const AspectRatioContent = styled('div', {
   name: 'JoyAspectRatio',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
-})<{ ownerState: AspectRatioOwnerState }>(({ theme, ownerState }) => ({
-  flex: 1,
-  position: 'relative',
-  borderRadius: 'inherit',
-  height: 0,
-  paddingBottom: 'calc(var(--AspectRatio-paddingBottom) - 2 * var(--variant-borderWidth, 0px))',
-  overflow: 'hidden',
-  transition: 'inherit', // makes it easy to add transition to the content
-  // use data-attribute instead of :first-child to support zero config SSR (emotion)
-  // use nested selector for integrating with nextjs image `fill` layout (spans are inserted on top of the img)
-  '& [data-first-child]': {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    boxSizing: 'border-box',
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    objectFit: ownerState.objectFit,
-    margin: 0,
-    padding: 0,
-    '& > img': {
-      // support art-direction that uses <picture><img /></picture>
+})<{ ownerState: AspectRatioOwnerState }>(({ theme, ownerState }) => {
+  const variant = ownerState.variant ?? 'soft';
+  const color = ownerState.color ?? 'neutral';
+
+  return {
+    flex: 1,
+    position: 'relative',
+    borderRadius: 'inherit',
+    height: 0,
+    paddingBottom: 'calc(var(--AspectRatio-paddingBottom) - 2 * var(--variant-borderWidth, 0px))',
+    overflow: 'hidden',
+    transition: 'inherit',
+
+    '& [data-first-child]': {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      boxSizing: 'border-box',
+      position: 'absolute',
       width: '100%',
       height: '100%',
       objectFit: ownerState.objectFit,
+      margin: 0,
+      padding: 0,
+      '& > img': {
+        width: '100%',
+        height: '100%',
+        objectFit: ownerState.objectFit,
+      },
     },
-  },
-  ...theme.typography['body-md'],
-  ...theme.variants[ownerState.variant!]?.[ownerState.color!],
-}));
+
+    ...theme.typography['body-md'],
+    ...(theme.variants[variant]?.[color] ?? {}),
+  };
+});
+
 
 /**
  *

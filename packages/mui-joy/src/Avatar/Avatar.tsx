@@ -33,40 +33,51 @@ const AvatarRoot = styled('div', {
   name: 'JoyAvatar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: AvatarOwnerState }>(({ theme, ownerState }) => ({
-  '--Icon-color':
-    ownerState.color !== 'neutral' || ownerState.variant === 'solid'
-      ? 'currentColor'
-      : theme.vars.palette.text.icon,
-  ...theme.typography[`title-${ownerState.size!}`],
-  ...(ownerState.size === 'sm' && {
-    width: `var(--Avatar-size, 2rem)`,
-    height: `var(--Avatar-size, 2rem)`,
-    fontSize: `calc(var(--Avatar-size, 2rem) * 0.4375)`, // default as 14px
-  }),
-  ...(ownerState.size === 'md' && {
-    width: `var(--Avatar-size, 2.5rem)`,
-    height: `var(--Avatar-size, 2.5rem)`,
-    fontSize: `calc(var(--Avatar-size, 2.5rem) * 0.4)`, // default as 16px
-  }),
-  ...(ownerState.size === 'lg' && {
-    width: `var(--Avatar-size, 3rem)`,
-    height: `var(--Avatar-size, 3rem)`,
-    fontSize: `calc(var(--Avatar-size, 3rem) * 0.375)`, // default as 18px
-  }),
-  marginInlineStart: 'var(--Avatar-marginInlineStart)',
-  boxShadow: `var(--Avatar-ring)`,
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexShrink: 0,
-  lineHeight: 1,
-  overflow: 'hidden',
-  borderRadius: 'var(--Avatar-radius, 50%)',
-  userSelect: 'none',
-  ...theme.variants[ownerState.variant!]?.[ownerState.color!],
-}));
+})<{ ownerState: AvatarOwnerState }>(({ theme, ownerState }) => {
+  const size = ownerState.size ?? 'md';
+  const variant = ownerState.variant ?? 'soft';
+  const color = ownerState.color ?? 'neutral';
+
+  return {
+    '--Icon-color':
+      color !== 'neutral' || variant === 'solid'
+        ? 'currentColor'
+        : theme.vars.palette.text.icon,
+
+    ...theme.typography[`title-${size}`],
+
+    ...(size === 'sm' && {
+      width: `var(--Avatar-size, 2rem)`,
+      height: `var(--Avatar-size, 2rem)`,
+      fontSize: `calc(var(--Avatar-size, 2rem) * 0.4375)`,
+    }),
+    ...(size === 'md' && {
+      width: `var(--Avatar-size, 2.5rem)`,
+      height: `var(--Avatar-size, 2.5rem)`,
+      fontSize: `calc(var(--Avatar-size, 2.5rem) * 0.4)`,
+    }),
+    ...(size === 'lg' && {
+      width: `var(--Avatar-size, 3rem)`,
+      height: `var(--Avatar-size, 3rem)`,
+      fontSize: `calc(var(--Avatar-size, 3rem) * 0.375)`,
+    }),
+
+    marginInlineStart: 'var(--Avatar-marginInlineStart)',
+    boxShadow: `var(--Avatar-ring)`,
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    lineHeight: 1,
+    overflow: 'hidden',
+    borderRadius: 'var(--Avatar-radius, 50%)',
+    userSelect: 'none',
+
+    ...theme.variants[variant]?.[color],
+  };
+});
+
 
 const AvatarImg = styled('img', {
   name: 'JoyAvatar',

@@ -35,11 +35,22 @@ const AlertRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: AlertOwnerState }>(({ theme, ownerState }) => {
+  const size = ownerState.size ?? 'md';
+  const variant = ownerState.variant ?? 'soft';
+  const color = ownerState.color ?? 'neutral';
+
+  const typographyMap = {
+    sm: 'xs',
+    md: 'sm',
+    lg: 'md',
+  } as const;
+
   const { p, padding, borderRadius } = resolveSxValue({ theme, ownerState }, [
     'p',
     'padding',
     'borderRadius',
   ]);
+
   return [
     {
       '--Alert-radius': theme.vars.radius.sm,
@@ -50,42 +61,47 @@ const AlertRoot = styled('div', {
       '--Button-radius': 'var(--Alert-decoratorChildRadius)',
       '--IconButton-radius': 'var(--Alert-decoratorChildRadius)',
       '--Icon-color': 'currentColor',
-      ...(ownerState.size === 'sm' && {
+
+      ...(size === 'sm' && {
         '--Alert-padding': '0.5rem',
         '--Alert-decoratorChildHeight': '1.5rem',
         '--Icon-fontSize': theme.vars.fontSize.xl,
         gap: '0.5rem',
       }),
-      ...(ownerState.size === 'md' && {
+      ...(size === 'md' && {
         '--Alert-padding': '0.75rem',
         '--Alert-decoratorChildHeight': '2rem',
         '--Icon-fontSize': theme.vars.fontSize.xl,
         gap: '0.625rem',
       }),
-      ...(ownerState.size === 'lg' && {
+      ...(size === 'lg' && {
         '--Alert-padding': '1rem',
         '--Alert-decoratorChildHeight': '2.375rem',
         '--Icon-fontSize': theme.vars.fontSize.xl2,
         gap: '0.875rem',
       }),
+
       backgroundColor: theme.vars.palette.background.surface,
       display: 'flex',
       position: 'relative',
       alignItems: 'center',
       padding: `var(--Alert-padding)`,
       borderRadius: 'var(--Alert-radius)',
-      ...theme.typography[`body-${({ sm: 'xs', md: 'sm', lg: 'md' } as const)[ownerState.size!]}`],
       fontWeight: theme.vars.fontWeight.md,
-      ...(ownerState.variant === 'solid' &&
-        ownerState.color &&
+      ...theme.typography[`body-${typographyMap[size]}`],
+
+      ...(variant === 'solid' &&
+        color &&
         ownerState.invertedColors &&
-        applySolidInversion(ownerState.color)(theme)),
-      ...(ownerState.variant === 'soft' &&
-        ownerState.color &&
+        applySolidInversion(color)(theme)),
+
+      ...(variant === 'soft' &&
+        color &&
         ownerState.invertedColors &&
-        applySoftInversion(ownerState.color)(theme)),
-      ...theme.variants[ownerState.variant!]?.[ownerState.color!],
-    } as const,
+        applySoftInversion(color)(theme)),
+
+      ...theme.variants[variant]?.[color],
+    },
     p !== undefined && { '--Alert-padding': p },
     padding !== undefined && { '--Alert-padding': padding },
     borderRadius !== undefined && { '--Alert-radius': borderRadius },

@@ -49,9 +49,13 @@ const excludePopperProps = <T extends Record<string, any>>({
 export const StyledAutocompleteListbox = styled(StyledList)<{
   ownerState: AutocompleteListboxOwnerState;
 }>(({ theme, ownerState }) => {
-  const variantStyle = theme.variants[ownerState.variant!]?.[ownerState.color!];
+  const variant = ownerState.variant ?? 'outlined';
+  const color = ownerState.color ?? 'neutral';
+
+  const variantStyle = theme.variants[variant]?.[color];
+
   return {
-    '--focus-outline-offset': `calc(${theme.vars.focus.thickness} * -1)`, // to prevent the focus outline from being cut by overflow
+    '--focus-outline-offset': `calc(${theme.vars.focus.thickness} * -1)`,
     '--ListItem-stickyBackground':
       variantStyle?.backgroundColor ||
       variantStyle?.background ||
@@ -66,22 +70,18 @@ export const StyledAutocompleteListbox = styled(StyledList)<{
     zIndex: theme.vars.zIndex.popup,
     overflow: 'auto',
     maxHeight: '40vh',
-    position: 'relative', // to make sure that the listbox is positioned for grouped options to work.
+    position: 'relative',
     '&:empty': {
       visibility: 'hidden',
     },
     [`& .${listItemClasses.nested}, & .${listItemClasses.nested} .${listClasses.root}`]: {
-      // For grouped options autocomplete:
-      // Force the position to make the scroll into view logic works because the `element.offsetTop` should reference to the listbox, not the grouped list.
-      // See the implementation of the `useAutocomplete` line:370
-      //
-      // Resource: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
       position: 'initial',
     },
   };
 });
 
-const AutocompleteListboxRoot = styled(StyledAutocompleteListbox, {
+
+const   Root = styled(StyledAutocompleteListbox, {
   name: 'JoyAutocompleteListbox',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,

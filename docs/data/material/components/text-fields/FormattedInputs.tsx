@@ -23,7 +23,7 @@ const TextMaskCustom = React.forwardRef<HTMLInputElement, CustomProps>(
           '#': /[1-9]/,
         }}
         inputRef={ref}
-        onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
+        onAccept={(value: string) => onChange({ target: { name: props.name, value } })}
         overwrite
       />
     );
@@ -52,7 +52,7 @@ export default function FormattedInputs() {
           onChange={handleChange}
           name="textmask"
           id="formatted-text-mask-input"
-          inputComponent={TextMaskCustom as any}
+          inputComponent={TextMaskCustom as React.ElementType}
         />
       </FormControl>
       <NumericFormat

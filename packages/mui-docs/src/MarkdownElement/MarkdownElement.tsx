@@ -832,14 +832,15 @@ export const MarkdownElement = React.forwardRef<HTMLDivElement, MarkdownElementP
     const handleRef = useForkRef(rootRef, ref);
 
     React.useEffect(() => {
-      const elements = rootRef.current!.getElementsByClassName('title-link-to-anchor');
+    const elements = rootRef.current?.getElementsByClassName('title-link-to-anchor');
 
-      for (let i = 0; i < elements.length; i += 1) {
-        // More reliable than `-webkit-user-drag` (https://caniuse.com/webkit-user-drag)
-        elements[i].setAttribute('draggable', 'false');
-        elements[i].addEventListener('click', handleHeaderClick);
-      }
-    }, []);
+    if (!elements) return;
+
+    for (let i = 0; i < elements.length; i += 1) {
+      elements[i].setAttribute('draggable', 'false');
+      elements[i].addEventListener('click', handleHeaderClick);
+    }
+  }, []);
 
     const more: React.ComponentProps<typeof Root> = {};
 
