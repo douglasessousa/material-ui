@@ -5,6 +5,12 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import exactProp from '@mui/utils/exactProp';
 import { NoSsrProps } from './NoSsr.types';
 
+interface NoSsrPropTypes {
+  children: PropTypes.Requireable<PropTypes.ReactNodeLike>;
+  defer: PropTypes.Requireable<boolean>;
+  fallback: PropTypes.Requireable<PropTypes.ReactNodeLike>;
+}
+
 /**
  * NoSsr purposely removes components from the subject of Server Side Rendering (SSR).
  *
@@ -63,11 +69,10 @@ NoSsr.propTypes /* remove-proptypes */ = {
    * @default null
    */
   fallback: PropTypes.node,
-} as any;
+} satisfies NoSsrPropTypes;
 
 if (process.env.NODE_ENV !== 'production') {
-  // eslint-disable-next-line
-  (NoSsr as any)['propTypes' + ''] = exactProp(NoSsr.propTypes);
+  (NoSsr as React.ComponentType & { propTypes: NoSsrPropTypes }).propTypes = exactProp(NoSsr.propTypes);
 }
 
 export default NoSsr;

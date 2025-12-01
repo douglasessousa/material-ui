@@ -107,7 +107,7 @@ export interface TranslateOptions {
   ignoreWarning?: boolean;
 }
 
-export type Translate = (key: string, options?: TranslateOptions) => any;
+export type Translate = (key: string, options?: TranslateOptions) => string | null;
 
 export function useTranslate(): Translate {
   const userLanguage = useUserLanguage();
@@ -116,7 +116,7 @@ export function useTranslate(): Translate {
 
   return React.useMemo(
     () =>
-      function translate(key: string, options: TranslateOptions = {}) {
+      function translate(key: string, options: TranslateOptions = {}): string | null {
         const { ignoreWarning = false } = options;
         const wordings = translations[userLanguage];
 

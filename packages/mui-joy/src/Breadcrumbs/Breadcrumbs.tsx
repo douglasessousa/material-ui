@@ -14,10 +14,10 @@ import { BreadcrumbsProps, BreadcrumbsOwnerState, BreadcrumbsTypeMap } from './B
 import { TypographyInheritContext } from '../Typography/Typography';
 
 const useUtilityClasses = (ownerState: BreadcrumbsOwnerState) => {
-  const { size } = ownerState;
+  const size = ownerState.size ?? 'md';
 
   const slots = {
-    root: ['root', size && `size${capitalize(size)}`],
+    root: ['root', `size${capitalize(size)}`],
     li: ['li'],
     ol: ['ol'],
     separator: ['separator'],
@@ -30,35 +30,37 @@ const BreadcrumbsRoot = styled('nav', {
   name: 'JoyBreadcrumbs',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: BreadcrumbsOwnerState }>(({ theme, ownerState }) => ({
-  ...(ownerState.size === 'sm' && {
-    '--Icon-fontSize': theme.vars.fontSize.lg,
-    gap: 'var(--Breadcrumbs-gap, 0.25rem)',
-    padding: '0.5rem',
-  }),
-  ...(ownerState.size === 'md' && {
-    '--Icon-fontSize': theme.vars.fontSize.xl,
-    gap: 'var(--Breadcrumbs-gap, 0.375rem)',
-    padding: '0.75rem',
-  }),
-  ...(ownerState.size === 'lg' && {
-    '--Icon-fontSize': theme.vars.fontSize.xl2,
-    gap: 'var(--Breadcrumbs-gap, 0.5rem)',
-    padding: '1rem',
-  }),
-  ...theme.typography[`body-${ownerState.size!}`],
-}));
+})<{ ownerState: BreadcrumbsOwnerState }>(({ theme, ownerState }) => {
+  const size = ownerState.size ?? 'md';
+
+  return {
+    ...(size === 'sm' && {
+      '--Icon-fontSize': theme.vars.fontSize.lg,
+      gap: '0.25rem',
+      padding: '0.5rem',
+    }),
+    ...(size === 'md' && {
+      '--Icon-fontSize': theme.vars.fontSize.xl,
+      gap: '0.375rem',
+      padding: '0.75rem',
+    }),
+    ...(size === 'lg' && {
+      '--Icon-fontSize': theme.vars.fontSize.xl2,
+      gap: '0.5rem',
+      padding: '1rem',
+    }),
+    ...theme.typography?.[`body-${size}`],
+  };
+});
 
 const BreadcrumbsOl = styled('ol', {
   name: 'JoyBreadcrumbs',
   slot: 'Ol',
-  overridesResolver: (props, styles) => styles.ol,
-})<{ ownerState: BreadcrumbsOwnerState }>({
+})({
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',
   gap: 'inherit',
-  // reset user-agent style
   padding: 0,
   margin: 0,
   listStyle: 'none',
@@ -67,8 +69,7 @@ const BreadcrumbsOl = styled('ol', {
 const BreadcrumbsLi = styled('li', {
   name: 'JoyBreadcrumbs',
   slot: 'Li',
-  overridesResolver: (props, styles) => styles.li,
-})<{ ownerState: BreadcrumbsOwnerState }>({
+})({
   display: 'flex',
   alignItems: 'center',
 });
@@ -76,21 +77,11 @@ const BreadcrumbsLi = styled('li', {
 const BreadcrumbsSeparator = styled('li', {
   name: 'JoyBreadcrumbs',
   slot: 'Separator',
-  overridesResolver: (props, styles) => styles.separator,
-})<{ ownerState: BreadcrumbsOwnerState }>({
+})({
   display: 'flex',
   userSelect: 'none',
 });
-/**
- *
- * Demos:
- *
- * - [Breadcrumbs](https://mui.com/joy-ui/react-breadcrumbs/)
- *
- * API:
- *
- * - [Breadcrumbs API](https://mui.com/joy-ui/api/breadcrumbs/)
- */
+
 const Breadcrumbs = React.forwardRef(function Breadcrumbs(inProps, ref) {
   const props = useThemeProps<typeof inProps & BreadcrumbsProps>({
     props: inProps,
@@ -108,10 +99,10 @@ const Breadcrumbs = React.forwardRef(function Breadcrumbs(inProps, ref) {
     ...other
   } = props;
 
-  const ownerState = {
+  const ownerState: BreadcrumbsOwnerState = {
     ...props,
-    separator,
     size,
+    separator,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -140,110 +131,41 @@ const Breadcrumbs = React.forwardRef(function Breadcrumbs(inProps, ref) {
   });
 
   const [SlotSeparator, separatorProps] = useSlot('separator', {
-    additionalProps: {
-      'aria-hidden': true,
-    },
+    additionalProps: { 'aria-hidden': true },
     className: classes.separator,
     elementType: BreadcrumbsSeparator,
     externalForwardedProps,
     ownerState,
   });
 
-  const allItems = (
-    React.Children.toArray(children).filter((child) => {
-      return React.isValidElement(child);
-    }) as Array<React.ReactElement<any>>
-  ).map((child, index) => (
-    <SlotLi key={`child-${index}`} {...liProps}>
-      {isMuiElement(child, ['Typography'])
-        ? React.cloneElement(child, { component: child.props.component ?? 'span' })
-        : child}
-    </SlotLi>
-  ));
+  const items = React.Children.toArray(children)
+    .filter(React.isValidElement)
+    .map((child, index) => (
+      <SlotLi key={index} {...liProps}>
+        {isMuiElement(child, ['Typography'])
+          ? React.cloneElement(child, { component: child.props.component ?? 'span' })
+          : child}
+      </SlotLi>
+    ));
 
   return (
     <TypographyInheritContext.Provider value>
       <SlotRoot {...rootProps}>
         <SlotOl {...olProps}>
-          {allItems.reduce((acc: React.ReactNode[], current: React.ReactNode, index: number) => {
-            if (index < allItems.length - 1) {
-              acc = acc.concat(
-                current,
-                <SlotSeparator key={`separator-${index}`} {...separatorProps}>
-                  {separator}
-                </SlotSeparator>,
-              );
-            } else {
-              acc.push(current);
-            }
-            return acc;
-          }, [])}
+          {items.flatMap((item, index) =>
+            index < items.length - 1
+              ? [
+                  item,
+                  <SlotSeparator key={`sep-${index}`} {...separatorProps}>
+                    {separator}
+                  </SlotSeparator>,
+                ]
+              : [item],
+          )}
         </SlotOl>
       </SlotRoot>
     </TypographyInheritContext.Provider>
   );
 }) as OverridableComponent<BreadcrumbsTypeMap>;
-
-Breadcrumbs.propTypes /* remove-proptypes */ = {
-  // ┌────────────────────────────── Warning ──────────────────────────────┐
-  // │ These PropTypes are generated from the TypeScript type definitions. │
-  // │ To update them, edit the TypeScript types and run `pnpm proptypes`. │
-  // └─────────────────────────────────────────────────────────────────────┘
-  /**
-   * The content of the component.
-   */
-  children: PropTypes.node,
-  /**
-   * @ignore
-   */
-  className: PropTypes.string,
-  /**
-   * The component used for the root node.
-   * Either a string to use a HTML element or a component.
-   */
-  component: PropTypes.elementType,
-  /**
-   * Custom separator node.
-   * @default '/'
-   */
-  separator: PropTypes.node,
-  /**
-   * The size of the component.
-   * It accepts theme values between 'sm' and 'lg'.
-   * @default 'md'
-   */
-  size: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
-    PropTypes.oneOf(['sm', 'md', 'lg']),
-    PropTypes.string,
-  ]),
-  /**
-   * The props used for each slot inside.
-   * @default {}
-   */
-  slotProps: PropTypes.shape({
-    li: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-    ol: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-    root: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-    separator: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  }),
-  /**
-   * The components used for each slot inside.
-   * @default {}
-   */
-  slots: PropTypes.shape({
-    li: PropTypes.elementType,
-    ol: PropTypes.elementType,
-    root: PropTypes.elementType,
-    separator: PropTypes.elementType,
-  }),
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
 
 export default Breadcrumbs;

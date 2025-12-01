@@ -5,6 +5,12 @@ import clsx from 'clsx';
 import { SliderValueLabelProps } from './SliderValueLabel.types';
 import sliderClasses from './sliderClasses';
 
+interface SliderValueLabelPropTypes {
+  children: PropTypes.Requireable<PropTypes.ReactElementLike>;
+  className: PropTypes.Requireable<string>;
+  value: PropTypes.Requireable<PropTypes.ReactNodeLike>;
+}
+
 const useValueLabelClasses = (props: SliderValueLabelProps) => {
   const { open } = props;
 
@@ -50,4 +56,4 @@ SliderValueLabel.propTypes = {
   children: PropTypes.element.isRequired,
   className: PropTypes.string,
   value: PropTypes.node,
-} as any;
+} satisfies SliderValueLabelPropTypes;

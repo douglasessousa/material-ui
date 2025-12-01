@@ -19,6 +19,24 @@ import RowListContext from '../List/RowListContext';
 import ListItemButtonOrientationContext from '../ListItemButton/ListItemButtonOrientationContext';
 import useSlot from '../utils/useSlot';
 
+interface InnerMenuItemPropTypes {
+  children: PropTypes.Requireable<PropTypes.ReactNodeLike>;
+  color: PropTypes.Requireable<string>;
+  component: PropTypes.Requireable<PropTypes.ReactComponentLike>;
+  disabled: PropTypes.Requireable<boolean>;
+  id: PropTypes.Requireable<string>;
+  orientation: PropTypes.Requireable<'horizontal' | 'vertical'>;
+  selected: PropTypes.Requireable<boolean>;
+  slotProps: PropTypes.Requireable<object>;
+  slots: PropTypes.Requireable<object>;
+  variant: PropTypes.Requireable<string>;
+}
+
+interface StableMenuItemPropTypes {
+  children: PropTypes.Requireable<PropTypes.ReactNodeLike>;
+  id: PropTypes.Requireable<string>;
+}
+
 const useUtilityClasses = (ownerState: MenuItemOwnerState) => {
   const { focusVisible, disabled, selected, color, variant } = ownerState;
   const slots = {
@@ -165,7 +183,7 @@ InnerMenuItem.propTypes /* remove-proptypes */ = {
     PropTypes.oneOf(['outlined', 'plain', 'soft', 'solid']),
     PropTypes.string,
   ]),
-} as any;
+} satisfies InnerMenuItemPropTypes;
 
 const MenuItem = React.memo(InnerMenuItem);
 /**
@@ -206,6 +224,6 @@ StableMenuItem.propTypes /* remove-proptypes */ = {
    */
   children: PropTypes.node,
   id: PropTypes.string,
-} as any;
+} satisfies StableMenuItemPropTypes;
 
 export default StableMenuItem;

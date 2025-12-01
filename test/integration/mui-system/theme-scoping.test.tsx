@@ -64,9 +64,12 @@ const CustomMaterial = material.styled('div')(({ theme }) => ({
 
 describe('Multiple nested theme providers', () => {
   const { render } = createRenderer();
-  let originalMatchmedia: any;
+  
+  let originalMatchMedia: typeof window.matchMedia;
+  
   let storage: Record<string, string> = {};
-  const createMatchMedia = (matches: boolean) => () => ({
+  
+  const createMatchMedia = (matches: boolean): (() => Partial<MediaQueryList>) => () => ({
     matches,
     // Keep mocking legacy methods because @mui/material v5 still uses them
     addListener: () => {},
@@ -76,13 +79,13 @@ describe('Multiple nested theme providers', () => {
   });
 
   beforeEach(() => {
-    originalMatchmedia = window.matchMedia;
+    originalMatchMedia = window.matchMedia;
 
     // Create mocks of localStorage getItem and setItem functions
     Object.defineProperty(globalThis, 'localStorage', {
       value: {
-        getItem: spy((key) => storage[key]),
-        setItem: spy((key, value) => {
+        getItem: spy((key: string) => storage[key]),
+        setItem: spy((key: string, value: string) => {
           storage[key] = value;
         }),
       },
@@ -95,7 +98,7 @@ describe('Multiple nested theme providers', () => {
   });
 
   afterEach(() => {
-    window.matchMedia = originalMatchmedia;
+    window.matchMedia = originalMatchMedia;
   });
 
   it('[docs] Material UI + Joy UI', () => {

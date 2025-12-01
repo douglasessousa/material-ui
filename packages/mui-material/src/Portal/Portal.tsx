@@ -10,6 +10,12 @@ import exactProp from '@mui/utils/exactProp';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { PortalProps } from './Portal.types';
 
+interface PortalPropTypes {
+  children: PropTypes.Requireable<PropTypes.ReactNodeLike>;
+  container: PropTypes.Requireable<Element | (() => Element | null) | null>;
+  disablePortal: PropTypes.Requireable<boolean>;
+}
+
 function getContainer(container: PortalProps['container']) {
   return typeof container === 'function' ? container() : container;
 }
@@ -96,11 +102,11 @@ Portal.propTypes /* remove-proptypes */ = {
    * @default false
    */
   disablePortal: PropTypes.bool,
-} as any;
+} satisfies PortalPropTypes;
 
 if (process.env.NODE_ENV !== 'production') {
-  // eslint-disable-next-line
-  (Portal as any)['propTypes' + ''] = exactProp((Portal as any).propTypes);
+  (Portal as React.ComponentType & { propTypes: PortalPropTypes }).propTypes = 
+    exactProp(Portal.propTypes);
 }
 
 export default Portal;

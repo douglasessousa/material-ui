@@ -30,7 +30,7 @@ function callUseSlotProps<
       ref: React.Ref<UseSlotPropsResult<ElementType, SlotProps, AdditionalProps, OwnerState>>,
     ) => {
       const slotProps = useSlotProps(parameters);
-      React.useImperativeHandle(ref, () => slotProps as any);
+      React.useImperativeHandle(ref, () => slotProps as UseSlotPropsResult<ElementType, SlotProps, AdditionalProps, OwnerState>);
       return null;
     },
   );
@@ -107,7 +107,7 @@ describe('useSlotProps', () => {
       id: 'test',
     });
 
-    function TestComponent(props: any) {
+    function TestComponent(props: React.ComponentPropsWithoutRef<'div'>) {
       return <div {...props} />;
     }
 
@@ -210,7 +210,9 @@ describe('useSlotProps', () => {
       ref: additionalRef,
     };
 
-    function TestComponent(props: any) {
+    function TestComponent(props: React.ComponentPropsWithoutRef<'div'> & { 
+      ownerState?: { test?: boolean; foo?: string } 
+    }){
       return <div {...props} />;
     }
 
