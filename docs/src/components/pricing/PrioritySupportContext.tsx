@@ -1,15 +1,21 @@
 import * as React from 'react';
 
-const PrioritySupport = React.createContext<{
+export interface PrioritySupportContextValue {
   prioritySupport: boolean;
   setPrioritySupport: React.Dispatch<React.SetStateAction<boolean>>;
-}>(undefined as any);
+}
+
+export interface PrioritySupportProviderProps {
+  children: React.ReactNode; 
+}
+
+const PrioritySupport = React.createContext<PrioritySupportContextValue | null>(null);
 
 if (process.env.NODE_ENV !== 'production') {
   PrioritySupport.displayName = 'PrioritySupport';
 }
 
-export function PrioritySupportProvider(props: any) {
+export function PrioritySupportProvider(props: PrioritySupportProviderProps) {
   const [prioritySupport, setPrioritySupport] = React.useState<boolean>(false);
   const value = React.useMemo(
     () => ({ prioritySupport, setPrioritySupport }),
@@ -19,5 +25,11 @@ export function PrioritySupportProvider(props: any) {
 }
 
 export function usePrioritySupport() {
-  return React.useContext(PrioritySupport);
+  const context = React.useContext(PrioritySupport);
+  
+  if (context === null) {
+    throw new Error('usePrioritySupport must be used within a PrioritySupportProvider');
+  }
+  
+  return context;
 }
