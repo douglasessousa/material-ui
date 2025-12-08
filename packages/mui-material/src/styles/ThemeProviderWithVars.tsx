@@ -6,6 +6,7 @@ import createTheme from './createTheme';
 import createTypography from './createTypography';
 import THEME_ID from './identifier';
 import { defaultConfig } from '../InitColorSchemeScript/InitColorSchemeScript';
+import * as React from 'react'; 
 
 const {
   CssVarsProvider: InternalCssVarsProvider,
@@ -37,9 +38,12 @@ const {
 
 let warnedOnce = false;
 
+type ExperimentalCssVarsProviderProps = React.ComponentProps<typeof InternalCssVarsProvider>;
+
+
 // TODO: remove in v7
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function Experimental_CssVarsProvider(props: any) {
+function Experimental_CssVarsProvider(props: ExperimentalCssVarsProviderProps) {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnce) {
       console.warn(
