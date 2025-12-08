@@ -1,7 +1,14 @@
+import * as React from 'react';
 import ReactMarkdown from 'markdown-to-jsx';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
+import { TypographyProps } from '@mui/material/Typography';
+
+export interface MarkdownComponentProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: string; 
+}
+
 
 const options = {
   overrides: {
@@ -34,7 +41,7 @@ const options = {
     },
     a: { component: Link },
     li: {
-      component: (props: any) => (
+      component: (props: TypographyProps) => (
         <Box component="li" sx={{ mt: 1 }}>
           <Typography component="span" {...props} />
         </Box>
@@ -43,6 +50,6 @@ const options = {
   },
 };
 
-export default function Markdown(props: any) {
+export default function Markdown(props: MarkdownComponentProps) {
   return <ReactMarkdown options={options} {...props} />;
 }
