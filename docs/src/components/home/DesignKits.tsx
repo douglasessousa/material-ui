@@ -7,9 +7,9 @@ import FadeDelay from 'docs/src/components/animation/FadeDelay';
 
 const ratio = 900 / 494;
 
-// 'transparent' is interpreted as transparent black in Safari
-// See https://css-tricks.com/thing-know-gradients-transparent-black/
 const transparent = 'rgba(255,255,255,0)';
+
+type DesignToolBrand = 'figma' | 'sketch';
 
 const Image = styled('img')(({ theme }) => ({
   display: 'block',
@@ -66,7 +66,7 @@ const Anchor = styled('a')(({ theme }) => [
 
 const DesignToolLink = React.forwardRef<
   HTMLAnchorElement,
-  React.PropsWithChildren<{ brand: 'figma' | 'sketch' }>
+  React.PropsWithChildren<{ brand: DesignToolBrand }> // MUT CORRIGIDO AQUI
 >(function DesignToolLink(props, ref) {
   const { brand, ...other } = props;
   return (
@@ -89,7 +89,7 @@ const DesignToolLink = React.forwardRef<
 
 const DesignToolLogo = React.forwardRef<
   HTMLImageElement,
-  { brand: 'figma' | 'sketch' } & AvatarProps
+  { brand: DesignToolBrand } & AvatarProps 
 >(function DesignToolLogo({ brand, ...props }, ref) {
   return (
     <Box
@@ -195,7 +195,7 @@ export function DesignKitImagesSet2({
 }
 
 export function DesignKitTools({ disableLink, ...props }: { disableLink?: boolean } & BoxProps) {
-  function renderTool(brand: 'figma' | 'sketch') {
+  function renderTool(brand: DesignToolBrand) { 
     if (disableLink) {
       return <DesignToolLogo brand={brand} />;
     }
