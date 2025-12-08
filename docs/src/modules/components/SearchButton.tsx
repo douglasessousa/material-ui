@@ -3,6 +3,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { alpha, styled } from '@mui/material/styles';
 import { useTranslate } from '@mui/docs/i18n';
 
+export interface SearchButtonProps
+  extends React.ComponentPropsWithoutRef<'button'> {
+  onRef?: React.Ref<HTMLButtonElement>;
+}
+
 const SearchButtonStyled = styled('button')(({ theme }) => [
   {
     minHeight: 32,
@@ -30,7 +35,10 @@ const SearchButtonStyled = styled('button')(({ theme }) => [
     cursor: 'pointer',
     transitionProperty: 'all',
     transitionDuration: '150ms',
-    boxShadow: `hsl(200, 0%, 100%) 0 1px 0 inset, ${alpha(theme.palette.grey[100], 0.4)} 0 -1px 0 inset, ${alpha(theme.palette.grey[200], 0.5)} 0 1px 2px 0`,
+    boxShadow: `hsl(200, 0%, 100%) 0 1px 0 inset, ${alpha(
+      theme.palette.grey[100],
+      0.4,
+    )} 0 -1px 0 inset, ${alpha(theme.palette.grey[200], 0.5)} 0 1px 2px 0`,
     '&:hover': {
       background: alpha(theme.palette.grey[100], 0.5),
       borderColor: (theme.vars || theme).palette.grey[300],
@@ -44,7 +52,9 @@ const SearchButtonStyled = styled('button')(({ theme }) => [
   theme.applyDarkStyles({
     backgroundColor: alpha(theme.palette.primaryDark[700], 0.4),
     borderColor: alpha(theme.palette.primaryDark[600], 0.4),
-    boxShadow: `${alpha(theme.palette.primaryDark[600], 0.1)} 0 1px 0 inset, ${(theme.vars || theme).palette.common.black} 0 -1px 0 inset, ${(theme.vars || theme).palette.common.black} 0 1px 2px 0`,
+    boxShadow: `${alpha(theme.palette.primaryDark[600], 0.1)} 0 1px 0 inset, ${
+      (theme.vars || theme).palette.common.black
+    } 0 -1px 0 inset, ${(theme.vars || theme).palette.common.black} 0 1px 2px 0`,
     '&:hover': {
       background: (theme.vars || theme).palette.primaryDark[700],
       borderColor: (theme.vars || theme).palette.primaryDark[600],
@@ -55,7 +65,7 @@ const SearchButtonStyled = styled('button')(({ theme }) => [
 
 const SearchLabel = styled('span')(({ theme }) => ({
   marginRight: 'auto',
-  marginBottom: '1px', // optical alignment
+  marginBottom: '1px', 
   color: (theme.vars || theme).palette.text.tertiary,
   lineHeight: 1,
 }));
@@ -77,12 +87,6 @@ const Shortcut = styled('kbd')(({ theme }) => {
     }),
   };
 });
-
-interface SearchButtonProps {
-  onClick?: () => void;
-  onRef?: React.Ref<HTMLButtonElement>;
-  [key: string]: any;
-}
 
 const subscribe = () => () => {};
 const getSnapshot = () =>
