@@ -291,13 +291,16 @@ type TabsConfig = {
   tab: string;
 };
 
-export function HighlightedCodeWithTabs(
-  props: {
+export interface HighlightedCodeWithTabsProps extends TabsOwnProps {
     tabs: Array<TabsConfig>;
     storageKey?: string;
-  } & Record<string, any>,
+}
+
+export function HighlightedCodeWithTabs(
+  props: HighlightedCodeWithTabsProps,
 ) {
-  const { tabs, storageKey } = props;
+  const { tabs, storageKey, ...other } = props;
+  
   const availableTabs = React.useMemo(() => {
     const result = tabs.map(({ tab }) => tab);
     if (storageKey === 'package-manager') {
@@ -309,7 +312,6 @@ export function HighlightedCodeWithTabs(
     return result;
   }, [storageKey, tabs]);
   const [activeTab, setActiveTab] = useLocalStorageState(storageKey ?? null, availableTabs[0]);
-  // During hydration, activeTab is null, default to first value.
   const defaultizedActiveTab = activeTab ?? availableTabs[0];
 
   const [mounted, setMounted] = React.useState(false);
@@ -324,7 +326,12 @@ export function HighlightedCodeWithTabs(
 
   const ownerState = { mounted };
   return (
-    <Tabs selectionFollowsFocus value={defaultizedActiveTab} onChange={handleChange}>
+    <Tabs 
+      selectionFollowsFocus 
+      value={defaultizedActiveTab} 
+      onChange={handleChange}
+      {...other} 
+    >
       <CodeTabList ownerState={ownerState}>
         {tabs.map(({ tab }) => (
           <CodeTab ownerState={ownerState} key={tab} value={tab}>
