@@ -18,6 +18,7 @@ import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
+import { HTMLAttributes } from 'react'; 
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
@@ -40,7 +41,13 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-function CustomTabPanel(props: { [x: string]: any; children: any; value: any; index: any }) {
+interface CustomTabPanelProps extends HTMLAttributes<HTMLDivElement> {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: CustomTabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -83,7 +90,8 @@ export default function DashboardTemplateTheme() {
     setAnchorEl(null);
   };
   const [value, setValue] = React.useState(0);
-  const handleChange = (_event: any, newValue: React.SetStateAction<number>) => {
+  
+  const handleChange = (_event: React.SyntheticEvent, newValue: React.SetStateAction<number>) => {
     setValue(newValue);
   };
 
