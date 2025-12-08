@@ -1,12 +1,21 @@
 import * as React from 'react';
 
-const LicenseModel = React.createContext<any>({});
+export interface LicenseModelContextValue {
+  licenseModel: string;
+  setLicenseModel: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface LicenseModelProviderProps {
+  children: React.ReactNode;
+}
+
+const LicenseModel = React.createContext<LicenseModelContextValue | null>(null);
 
 if (process.env.NODE_ENV !== 'production') {
   LicenseModel.displayName = 'LicenseModel';
 }
 
-export function LicenseModelProvider(props: any) {
+export function LicenseModelProvider(props: LicenseModelProviderProps) {
   const [licenseModel, setLicenseModel] = React.useState<string>('annual');
   const value = React.useMemo(
     () => ({ licenseModel, setLicenseModel }),
@@ -16,5 +25,11 @@ export function LicenseModelProvider(props: any) {
 }
 
 export function useLicenseModel() {
-  return React.useContext(LicenseModel);
+  const context = React.useContext(LicenseModel);
+  
+  if (context === null) {
+    throw new Error('useLicenseModel must be used within a LicenseModelProvider');
+  }
+  
+  return context;
 }
