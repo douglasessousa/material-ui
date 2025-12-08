@@ -4,10 +4,8 @@ import { expect } from 'chai';
 import { act, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
 import FocusTrap from '@mui/material/Unstable_TrapFocus';
 import Portal from '@mui/material/Portal';
+import { TrapFocusProps } from '@mui/material/Unstable_TrapFocus'; 
 
-interface GenericProps {
-  [index: string]: any;
-}
 
 describe('<FocusTrap />', () => {
   const { clock, render } = createRenderer();
@@ -111,16 +109,18 @@ describe('<FocusTrap />', () => {
     expect(screen.getByTestId('root')).toHaveFocus();
   });
 
+  function Test(props: TrapFocusProps & React.PropsWithChildren) { 
+    return (
+      <FocusTrap disableAutoFocus open {...props}>
+        <div data-testid="focus-root" tabIndex={-1}>
+          {ReactDOM.createPortal(<input data-testid="portal-input" />, document.body)}
+          {props.children}
+        </div>
+      </FocusTrap>
+    );
+  }
+  
   it('does not steal focus from a portaled element if any prop but open changes', async () => {
-    function Test(props: GenericProps) {
-      return (
-        <FocusTrap disableAutoFocus open {...props}>
-          <div data-testid="focus-root" tabIndex={-1}>
-            {ReactDOM.createPortal(<input data-testid="portal-input" />, document.body)}
-          </div>
-        </FocusTrap>
-      );
-    }
     const { setProps } = render(<Test />);
     const portaledTextbox = screen.getByTestId('portal-input');
     await act(async () => {
@@ -182,7 +182,7 @@ describe('<FocusTrap />', () => {
 
   it('does not bounce focus around due to sync focus-restore + focus-contain', () => {
     const eventLog: string[] = [];
-    function Test(props: GenericProps) {
+    function Test(props: TrapFocusProps & React.PropsWithChildren) { 
       return (
         <div onBlur={() => eventLog.push('blur')}>
           <FocusTrap open {...props}>
@@ -207,7 +207,7 @@ describe('<FocusTrap />', () => {
   });
 
   it('does not focus if isEnabled returns false', async () => {
-    function Test(props: GenericProps) {
+    function Test(props: TrapFocusProps & React.PropsWithChildren) { 
       return (
         <div>
           <input />
@@ -234,7 +234,7 @@ describe('<FocusTrap />', () => {
   });
 
   it('restores focus when closed', () => {
-    function Test(props: GenericProps) {
+    function Test(props: TrapFocusProps & React.PropsWithChildren) { 
       return (
         <FocusTrap open {...props}>
           <div data-testid="focus-root" tabIndex={-1}>
@@ -251,7 +251,7 @@ describe('<FocusTrap />', () => {
   });
 
   it('undesired: enabling restore-focus logic when closing has no effect', () => {
-    function Test(props: GenericProps) {
+    function Test(props: TrapFocusProps & React.PropsWithChildren) { 
       return (
         <FocusTrap open disableRestoreFocus {...props}>
           <div data-testid="root" tabIndex={-1}>
@@ -269,7 +269,7 @@ describe('<FocusTrap />', () => {
   });
 
   it('undesired: setting `disableRestoreFocus` to false before closing has no effect', () => {
-    function Test(props: GenericProps) {
+    function Test(props: TrapFocusProps & React.PropsWithChildren) { 
       return (
         <FocusTrap open disableRestoreFocus {...props}>
           <div data-testid="root" tabIndex={-1}>
@@ -373,7 +373,7 @@ describe('<FocusTrap />', () => {
       });
 
       it('should restore the focus', async () => {
-        function Test(props: GenericProps) {
+        function Test(props: TrapFocusProps & React.PropsWithChildren) {
           return (
             <div>
               <input data-testid="outside-input" />
