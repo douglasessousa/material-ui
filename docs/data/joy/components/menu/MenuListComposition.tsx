@@ -22,7 +22,7 @@ export default function MenuListComposition() {
     if (event.key === 'Tab') {
       setOpen(false);
     } else if (event.key === 'Escape') {
-      buttonRef.current!.focus();
+      buttonRef.current?.focus(); 
       setOpen(false);
     }
   };
