@@ -5,11 +5,9 @@ import Box, { BoxProps } from '@mui/material/Box';
 import Slide from 'docs/src/components/animation/Slide';
 import FadeDelay from 'docs/src/components/animation/FadeDelay';
 
-// 🔥 1. Centralizar tipos de união
 type DesignToolBrand = 'figma' | 'sketch' | 'xd';
 type AnimationDirection = 'up' | 'down';
 
-// 🔥 2. Melhorar definição de keyframes com type safety
 interface CSSKeyframe {
   transform?: string;
   opacity?: number;
@@ -17,7 +15,6 @@ interface CSSKeyframe {
 
 type CSSKeyframes = Record<`${number}%`, CSSKeyframe>;
 
-// 🔥 3. Configurações centralizadas para brands
 const DESIGN_TOOL_CONFIGS: Record<
   DesignToolBrand, 
   { 
@@ -43,7 +40,6 @@ const DESIGN_TOOL_CONFIGS: Record<
   },
 };
 
-// 🔥 4. Keyframes padrão como constantes tipadas
 const DEFAULT_ANIMATIONS: Record<AnimationDirection, CSSKeyframes> = {
   up: {
     '0%': { transform: 'translateY(-300px)' },
@@ -58,17 +54,14 @@ const DEFAULT_ANIMATIONS: Record<AnimationDirection, CSSKeyframes> = {
 const ratio = 900 / 494;
 const transparent = 'rgba(255,255,255,0)';
 
-// ... (styled components mantidos igual) ...
 
 const Image = styled('img')(({ theme }) => ({
-  // ... (estilos mantidos) ...
 }));
 
 const Anchor = styled('a')(({ theme }) => [
-  // ... (estilos mantidos) ...
 ]);
 
-// 🔥 5. Componente com tipo específico
+]
 interface DesignToolLinkProps extends React.PropsWithChildren {
   brand: DesignToolBrand;
 }
@@ -93,7 +86,6 @@ const DesignToolLink = React.forwardRef<HTMLAnchorElement, DesignToolLinkProps>(
   }
 );
 
-// 🔥 6. Props interface específica
 interface DesignToolLogoProps extends AvatarProps {
   brand: DesignToolBrand;
 }
@@ -157,7 +149,6 @@ export function PrefetchDesignKitImages() {
   );
 }
 
-// 🔥 7. Props interfaces específicas para componentes de imagem
 interface DesignKitImagesProps extends BoxProps {
   keyframes?: CSSKeyframes;
   animationDirection?: AnimationDirection;
@@ -207,7 +198,6 @@ export function DesignKitImagesSet2({
   );
 }
 
-// 🔥 8. Props interface para DesignKitTools
 interface DesignKitToolsProps extends BoxProps {
   disableLink?: boolean;
   availableBrands?: DesignToolBrand[];
@@ -260,8 +250,6 @@ export function DesignKitTools({
     </Box>
   );
 }
-
-// ... (restante do código mantido) ...
 
 export default function DesignKits() {
   return (
