@@ -15,6 +15,8 @@ export default function LinearProgressCountUp() {
     }),
   });
 
+  const numericValue = Number(value ?? 0);
+
   return (
     <LinearProgress
       determinate
@@ -22,7 +24,7 @@ export default function LinearProgressCountUp() {
       color="neutral"
       size="sm"
       thickness={24}
-      value={Number(value!)}
+      value={numericValue}
       sx={{
         '--LinearProgress-radius': '20px',
         '--LinearProgress-thickness': '24px',
@@ -33,7 +35,7 @@ export default function LinearProgressCountUp() {
         textColor="common.white"
         sx={{ fontWeight: 'xl', mixBlendMode: 'difference' }}
       >
-        LOADING… {`${Math.round(Number(value!))}%`}
+        LOADING… {`${Math.round(numericValue)}%`}
       </Typography>
     </LinearProgress>
   );
