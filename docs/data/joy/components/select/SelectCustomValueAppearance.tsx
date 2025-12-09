@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Chip from '@mui/joy/Chip';
@@ -5,6 +6,10 @@ import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import Typography from '@mui/joy/Typography';
+
+interface CustomCSSProperties extends React.CSSProperties {
+  '--colors-role': string;
+}
 
 export default function SelectCustomValueAppearance() {
   const people = [
@@ -56,7 +61,7 @@ export default function SelectCustomValueAppearance() {
               fontSize: 'xs',
               bgcolor: `${'var(--colors-role)'}.softBg`,
             }}
-            style={{ '--colors-role': colors[data.role] } as any}
+            style={{ '--colors-role': colors[data.role] } as CustomCSSProperties}
           >
             {data.role}
           </Chip>
