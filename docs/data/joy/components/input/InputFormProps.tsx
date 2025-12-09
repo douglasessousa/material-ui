@@ -1,14 +1,17 @@
 import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
+import * as React from 'react';
 
 export default function InputFormProps() {
   return (
     <form
-      onSubmit={(event) => {
+      onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const formJson = Object.fromEntries((formData as any).entries());
+        
+        const formJson = Object.fromEntries(formData.entries() as Iterable<[string, FormDataEntryValue]>);
+        
         alert(JSON.stringify(formJson));
       }}
     >
