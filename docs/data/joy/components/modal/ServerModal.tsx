@@ -27,7 +27,7 @@ export default function ServerModal() {
         disableEnforceFocus
         disableAutoFocus
         open
-        container={() => rootRef.current!}
+        container={() => rootRef.current || undefined}
       >
         <ModalDialog
           aria-labelledby="server-modal-title"
