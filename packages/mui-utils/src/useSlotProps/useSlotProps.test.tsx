@@ -10,33 +10,33 @@ const { render } = createRenderer();
 function callUseSlotProps<
   ElementType extends React.ElementType,
   SlotProps,
-  ExternalForwardedProps,
-  ExternalSlotProps extends Record<string, unknown>,
   AdditionalProps,
   OwnerState,
 >(
   parameters: UseSlotPropsParameters<
     ElementType,
     SlotProps,
-    ExternalForwardedProps,
-    ExternalSlotProps,
+    any, 
+    any, 
     AdditionalProps,
     OwnerState
   >,
 ) {
+  type SlotResult = UseSlotPropsResult<ElementType, SlotProps, AdditionalProps, OwnerState>;
+  
   const TestComponent = React.forwardRef(
     (
       _: unknown,
-      ref: React.Ref<UseSlotPropsResult<ElementType, SlotProps, AdditionalProps, OwnerState>>,
+      ref: React.Ref<SlotResult>,
     ) => {
       const slotProps = useSlotProps(parameters);
-      React.useImperativeHandle(ref, () => slotProps as any);
+      React.useImperativeHandle(ref, () => slotProps as SlotResult); 
       return null;
     },
   );
 
   const ref =
-    React.createRef<UseSlotPropsResult<ElementType, SlotProps, AdditionalProps, OwnerState>>();
+    React.createRef<SlotResult>();
   render(<TestComponent ref={ref} />);
 
   return ref.current!;
@@ -107,7 +107,7 @@ describe('useSlotProps', () => {
       id: 'test',
     });
 
-    function TestComponent(props: any) {
+    function TestComponent(props: { ownerState: any } & React.HTMLAttributes<HTMLDivElement>) {
       return <div {...props} />;
     }
 
@@ -168,6 +168,7 @@ describe('useSlotProps', () => {
           onClick: externalClickHandler,
         });
 
+        // @ts-ignore
         otherHandlers.onClick(event);
         internalClickHandler(event);
       };
@@ -210,7 +211,7 @@ describe('useSlotProps', () => {
       ref: additionalRef,
     };
 
-    function TestComponent(props: any) {
+    function TestComponent(props: { ownerState: any } & React.HTMLAttributes<HTMLDivElement>) {
       return <div {...props} />;
     }
 
