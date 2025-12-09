@@ -15,7 +15,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import colors from '@mui/joy/colors';
 
-const Listbox = React.forwardRef<HTMLUListElement, any>((props, ref) => (
+const Listbox = React.forwardRef<
+  HTMLUListElement, 
+  React.ComponentPropsWithoutRef<'ul'>
+>((props, ref) => (
   <AutocompleteListbox
     ref={ref}
     {...props}
@@ -68,7 +71,6 @@ export default function GitHubLabel() {
             width: '100%',
             fontWeight: 'lg',
             color: 'text.secondary',
-            py: 1,
             '&:hover': {
               color: 'primary.plainColor',
             },
@@ -217,7 +219,6 @@ export default function GitHubLabel() {
                 </AutocompleteOption>
               )}
               options={[...labels].sort((a, b) => {
-                // Display the selected labels first.
                 let ai = value.indexOf(a);
                 ai = ai === -1 ? value.length + labels.indexOf(a) : ai;
                 let bi = value.indexOf(b);
