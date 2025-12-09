@@ -20,7 +20,7 @@ const TextMaskAdapter = React.forwardRef<HTMLInputElement, CustomProps>(
           '#': /[1-9]/,
         }}
         inputRef={ref}
-        onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
+        onAccept={(value: string) => onChange({ target: { name: props.name, value } })}
         overwrite
       />
     );
