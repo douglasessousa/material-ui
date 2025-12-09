@@ -14,7 +14,7 @@ export default function AlertVariousStates() {
   const items: {
     title: string;
     color: ColorPaletteProp;
-    icon: React.ReactElement<any>;
+    icon: React.ReactElement<{}>; 
   }[] = [
     { title: 'Success', color: 'success', icon: <CheckCircleIcon /> },
     { title: 'Warning', color: 'warning', icon: <WarningIcon /> },
